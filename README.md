@@ -1,2 +1,4 @@
-# myexporter
-Exports a mysql to a remote server
+# myex
+## A MySql EXporter
+Exports a mysql database to a remote server.
+Replaces urls - useful for Wordpress.
