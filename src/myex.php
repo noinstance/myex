@@ -2,10 +2,10 @@
 
 // imports
 require_once('lib/required.php');
-Required::import([ 'logger', 'stopwatch' ]);
+Required::import([ 'logger', 'stopwatch', 'wordpress' ]);
 
 // options
-$shortopts = 'h::o::d::u::p::H::O::D::U::P::f::r::zwh';
+$shortopts = 'h::o::d::u::p::H::O::D::U::P::f::r::w::zh';
 $options = getopt($shortopts);
 
 if(isset($options['h'])) {
@@ -21,7 +21,7 @@ if(isset($options['h'])) {
 	// Logger::log('  -U=value   destiny username');
 	// Logger::log('  -P=value   destiny password');
 	Logger::log('  -r=v1,v2   replaces v1 for v2 in the file; useful for absolute urls');
-	Logger::log('  -w         is wordpress dir; reads from wp-config.php');
+	Logger::log('  -w=dir     wordpress dir; reads from wp-config.php');
 	Logger::log('  -z         gzip output');
 	// Logger::log('  -r         remote server ');
 	Logger::log('  -h         print the help screen');
@@ -34,19 +34,38 @@ Logger::hr();
 $stopwatch = new Stopwatch();
 $stopwatch->start();
 
+// get origin db
 $originDB = new stdClass;
-$originDB->hostname = !empty($options['h']) ? $options['h'] : 'localhost';
-$originDB->port = !empty($options['o']) ? $options['o'] : 3306;
-$originDB->database = $options['d'];
-$originDB->username = $options['u'];
-$originDB->password = $options['p'];
 
-$targetDB = new stdClass;
-$targetDB->hostname = !empty($options['H']) ? $options['H'] : 'localhost';
-$targetDB->port = !empty($options['O']) ? $options['O'] : 3306;
-$targetDB->database = $options['D'];
-$targetDB->username = $options['U'];
-$targetDB->password = $options['P'];
+// try wordpress
+if(isset($options['w'])) {
+
+	try {
+		$wpRoot = !empty($options['w']) ? $options['w'] : __DIR__;
+		$originDB = Wordpress::getDatabaseConnectionObject($wpRoot);
+	} catch (Exception $e) {
+		Logger::log('!!! Error reading from wordpress: ' . $e->getMessage());
+	}
+
+	print_r($originDB);
+	die;
+
+
+} else {
+	
+	$originDB->hostname = !empty($options['h']) ? $options['h'] : 'localhost';
+	$originDB->port = !empty($options['o']) ? $options['o'] : 3306;
+	$originDB->database = $options['d'];
+	$originDB->username = $options['u'];
+	$originDB->password = $options['p'];	
+}
+
+// $targetDB = new stdClass;
+// $targetDB->hostname = !empty($options['H']) ? $options['H'] : 'localhost';
+// $targetDB->port = !empty($options['O']) ? $options['O'] : 3306;
+// $targetDB->database = $options['D'];
+// $targetDB->username = $options['U'];
+// $targetDB->password = $options['P'];
 
 $gzip = isset($options['z']) ? true : false;
 
