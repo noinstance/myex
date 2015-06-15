@@ -28,6 +28,8 @@ Edit ```$origin``` and ```$destiny``` arrays to provide info of your local datab
 
 ### Usage
 
+```cd``` to src.
+
 **Simple usage:** backup ```bloglocal``` database.
 
 ```
