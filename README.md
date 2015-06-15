@@ -28,7 +28,7 @@ Edit ```$origin``` and ```$destiny``` arrays to provide info of your local datab
 
 ### Usage
 
-**Simple usage:** backup ``bloglocal``` database.
+**Simple usage:** backup ```bloglocal``` database.
 
 ```
 $ php myex.php -D=bloglocal
