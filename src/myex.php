@@ -100,7 +100,12 @@ try {
 }
 
 // get backup
-$cmd = "mysqldump --host=$originDB->hostname --port=$originDB->port --user=$originDB->username --password=$originDB->password $originDB->database > $filename";
+$cmd = "mysqldump" .
+	" --host=" . $originDB->hostname .
+	" --port=" . $originDB->port . 
+	" --user=" . $originDB->username .
+	" --password=" . $originDB->password .
+	" " . $originDB->database . " > " . BACKUPDIR . $filename;
 Logger::log('- Running mysqldump... ', false);
 
 try {
@@ -116,11 +121,11 @@ try {
 try {
 	if($replace != false && count($replace) === 2) {
 		Logger::log('- Replacing strings... ', false);
-		$content = file_get_contents($filename);
+		$content = file_get_contents(BACKUPDIR . $filename);
 		$content = str_replace($replace[0], $replace[1], $content);
-		file_put_contents($filename, $content);
+		file_put_contents(BACKUPDIR . $filename, $content);
 		$content = null;
-		
+
 		Logger::log('Done!');
 		Logger::br();
 	}
@@ -135,7 +140,7 @@ try {
 	if($gzip) {
 		Logger::log('- Zipping...', false);
 
-		$cmd = "gzip --best $filename";
+		$cmd = "gzip --best " . BACKUPDIR . $filename;
 		exec($cmd);
 		$filename .= '.gz';
 
@@ -177,7 +182,7 @@ try {
 	    }
 
 		// send backup file		
-		if (!$scp->put($filename, $filename, NET_SCP_LOCAL_FILE)) {
+		if (!$scp->put($filename, BACKUPDIR . $filename, NET_SCP_LOCAL_FILE)) {
 	        throw new Exception("Failed to send backup file");
 	    }
 	    Logger::log('Done!');

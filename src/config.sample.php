@@ -42,3 +42,4 @@ $destiny = [
 
 define('ORIGIN', serialize($origin));
 define('DESTINY', serialize($destiny));
+define('BACKUPDIR', dirname(dirname(__FILE__)) . '/backup/');
