@@ -8,7 +8,7 @@ require_once('Net/SCP.php');
 // requires
 require_once('config.php');
 require_once('lib/required.php');
-Required::import([ 'logger', 'stopwatch', 'wordpress', 'target' ]);
+Required::import([ 'logger', 'stopwatch', 'wordpress', 'target', 'utils' ]);
 
 // options
 $shortopts = 'd::u::p::D::f::w::s::r::zh';
@@ -121,10 +121,30 @@ try {
 try {
 	if($replace != false && count($replace) === 2) {
 		Logger::log('- Replacing strings... ', false);
-		$content = file_get_contents(BACKUPDIR . $filename);
-		$content = str_replace($replace[0], $replace[1], $content);
-		file_put_contents(BACKUPDIR . $filename, $content);
-		$content = null;
+
+		$handle_reader = fopen(BACKUPDIR . $filename, "r");
+		$handle_writer = fopen(BACKUPDIR . $filename . '.tmp', "w");
+
+		if ($handle_reader) {
+		    while (($line = fgets($handle_reader)) !== false) {
+		    	// replace values
+		    	$line = str_replace($replace[0], $replace[1], $line);
+		    	// fix serialiazed data that might have been replaced
+		     	$line = Utils::fixSerializedData($line);   
+		     	// write to tmp file
+		     	fwrite($handle_writer, $line);
+		    }
+
+		    fclose($handle_reader);
+		    fclose($handle_writer);
+
+		    // rename tmp file
+		    unlink(BACKUPDIR . $filename);
+		    rename(BACKUPDIR . $filename . '.tmp', BACKUPDIR . $filename);
+
+		} else {
+		    throw new Exception("error opening file");
+		} 
 
 		Logger::log('Done!');
 		Logger::br();
@@ -202,7 +222,7 @@ try {
 			" --host=" . $remote['db']['hostname'] .
 			" --port=" . $remote['db']['port'] .
 			" -u" . $remote['db']['username'] .
-			" -p" . $remote['db']['password'];
+			" -p'" . $remote['db']['password'] . "'";
 
 		$cmd[] = $mysqlConnect . " < " . $createScriptName;
 		$cmd[] = $mysqlConnect . " " . $target->getDatabase() . " < " . $filename;
@@ -216,6 +236,7 @@ try {
 			
 			foreach ($cmd as $command) {
 				$ssh->exec($command);
+				// echo $command . "\n";
 			}
 			
 			Logger::log('Done!');
