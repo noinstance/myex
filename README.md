@@ -4,6 +4,7 @@
 Exports a mysql database to a remote server.
 
 Replaces urls - useful for Wordpress.
+Fixes serialiazed data and works with SiteOrigin Page Builder for Wordpress migrations.
 
 Requires mysqldump.
 
