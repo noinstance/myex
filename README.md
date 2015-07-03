@@ -2,6 +2,7 @@
 ## A MySql EXporter
 
 Exports a mysql database to a remote server.
+Requires mysqldump.
 
 ### Built with Wordpress in mind
 - Reads from wp-config.php and replicates the database in a remote server;
@@ -9,7 +10,6 @@ Exports a mysql database to a remote server.
 - Fixes serialiazed data;
 - Works with SiteOrigin Page Builder migrations.
 
-Requires mysqldump.
 
 ### Options
 ```
