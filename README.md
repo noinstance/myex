@@ -3,8 +3,11 @@
 
 Exports a mysql database to a remote server.
 
-Replaces urls - useful for Wordpress.
-Fixes serialiazed data and works with SiteOrigin Page Builder for Wordpress migrations.
+### Built with Wordpress in mind
+- Reads from wp-config.php and replicates the database in a remote server.
+- Replaces urls;
+- Fixes serialiazed data;
+- Works with SiteOrigin Page Builder migrations.
 
 Requires mysqldump.
 
