@@ -104,7 +104,7 @@ $cmd = "mysqldump" .
 	" --host=" . $originDB->hostname .
 	" --port=" . $originDB->port . 
 	" --user=" . $originDB->username .
-	" --password=" . $originDB->password .
+	" --password='" . $originDB->password . "'" .
 	" " . $originDB->database . " > " . BACKUPDIR . $filename;
 Logger::log('- Running mysqldump... ', false);
 
