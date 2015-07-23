@@ -92,7 +92,7 @@ try {
 	$gzip = isset($options['z']) ? true : false;
 	$replace = !empty($options['r']) ? explode(',', $options['r']) : false;
 	$remoteServer = !empty($options['s']) ? $options['s'] : false;
-	$filename = !empty($options['f']) ? $options['f'] : $originDB->database . date('-mdY-hms') . '.sql';
+	$filename = !empty($options['f']) ? $options['f'] : $originDB->database . date('-dmY-His') . '.sql';
 
 } catch (Exception $e) {
 	Logger::log('!!! Error reading options: ' . $e->getMessage());
