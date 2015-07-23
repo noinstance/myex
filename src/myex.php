@@ -179,6 +179,7 @@ try {
 		$remote = $destiny[$remoteServer];
 
 		Logger::log('- Uploading to ' . $remoteServer . '... ', false);
+		// $stopwatch->toggleWaiting();
 
 		// connection
 		$ssh = new Net_SSH2($remote['ssh']['hostname'], $remote['ssh']['port']);
@@ -205,6 +206,7 @@ try {
 		if (!$scp->put($filename, BACKUPDIR . $filename, NET_SCP_LOCAL_FILE)) {
 	        throw new Exception("Failed to send backup file");
 	    }
+	    // $stopwatch->toggleWaiting();
 	    Logger::log('Done!');
 	    Logger::br();
 
