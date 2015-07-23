@@ -92,7 +92,7 @@ try {
 	$gzip = isset($options['z']) ? true : false;
 	$replace = !empty($options['r']) ? explode(',', $options['r']) : false;
 	$remoteServer = !empty($options['s']) ? $options['s'] : false;
-	$filename = !empty($options['f']) ? $options['f'] : $originDB->database . date('-mdY-hms') . '.sql';
+	$filename = !empty($options['f']) ? $options['f'] : $originDB->database . date('-dmY-His') . '.sql';
 
 } catch (Exception $e) {
 	Logger::log('!!! Error reading options: ' . $e->getMessage());
@@ -104,7 +104,7 @@ $cmd = "mysqldump" .
 	" --host=" . $originDB->hostname .
 	" --port=" . $originDB->port . 
 	" --user=" . $originDB->username .
-	" --password=" . $originDB->password .
+	" --password='" . $originDB->password . "'" .
 	" " . $originDB->database . " > " . BACKUPDIR . $filename;
 Logger::log('- Running mysqldump... ', false);
 
@@ -113,7 +113,7 @@ try {
 	Logger::log('Done! File created: ' . $filename);
 	Logger::br();
 } catch(Exception $e) {
-	Logger::log('!!! error running mysqldump' . $e->getMessage());
+	Logger::log('!!! error running mysqldump: ' . $e->getMessage());
 	exit(0);
 }
 
@@ -168,7 +168,7 @@ try {
 		Logger::br();
 	}
 } catch(Exception $e) {
-	Logger::log('!!! error gzipping' . $e->getMessage());
+	Logger::log('!!! error gzipping: ' . $e->getMessage());
 	exit(0);
 }
 
@@ -262,10 +262,3 @@ Logger::log('Done in ' . $stopwatch->elapsed() . '!');
 Logger::hr();
 
 exit();
-
-
-// mysqldump --host=localhost --port=3306 --user=root --password=absolutament0 lumeta > test.sql
-
-// if ($mysqli->connect_errno) {
-//     Logger::log("Failed to connect to MySQL: " . $mysqli->connect_error);
-// }
